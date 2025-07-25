@@ -79,9 +79,9 @@ defmodule SimpleBudgeting.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
-      "ecto.setup": ["ecto.create", "run priv/repo/seed_database.exs", "ecto.migrate"],
-      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      setup: ["deps.get", "ecto.setup", "cd assets && npm install", "assets.setup", "assets.build"],
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "ecto.reset": ["ecto.drop", "run priv/repo/seed_database.exs", "ecto.setup"],
       "ecto.dump": ["run priv/repo/dump_sql_database.exs"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
