@@ -1,0 +1,75 @@
+services:
+  app:
+    command: elixir --sname simple_budgeting@app --cookie SimpleBudgeting -S mix phx.server
+    ports:
+      - "4000:4000"
+      - "4369:4369"
+    depends_on:
+      - ollama
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    links:
+    - db
+    volumes:
+    - .:/app
+    - /tmp/:/tmp/
+    - elixir-artifacts:/app/elixir-artifacts
+    - ~/.aws:/root/.aws
+    environment:
+      ELIXIR_BUILD_PATH: /app/elixir-artifacts/_build
+      ELIXIR_DEPS_PATH: /app/elixir-artifacts/deps
+      DATABASE_PASSWORD: FNVXCt4ijpTt849
+      DATABASE_HOSTNAME: db
+    networks:
+      - ollama-docker
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  ollama:
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: docker.io/ollama/ollama:latest
+    ports:
+      - 7869:11434
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    networks:
+      - ollama-docker
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  db:
+    image: postgres:16
+    volumes:
+    - db-data:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: FNVXCt4ijpTt849
+      POSTGRES_DB: simple_budgeting_dev
+    shm_size: 256M
+    networks:
+      - ollama-docker
+
+  redis:
+    image: redis
+    networks:
+      - ollama-docker
+
+volumes:
+  db-data:
+  elixir-artifacts:
+
+networks:
+  ollama-docker:
+    external: false

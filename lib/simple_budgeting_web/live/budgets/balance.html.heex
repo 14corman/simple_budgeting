@@ -1,0 +1,132 @@
+<div>
+  <SimpleBudgetingWeb.Application.Wrapper.wrapper title="Budgets" context="Budgets">
+    <.card>
+      <:header>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Balance budget paycheck percentages
+        </h3>
+      </:header>
+
+      <.description_list>
+        <.description_list_row>
+          <:label>Estimated total income</:label>
+          <.form
+            :let={f}
+            id="estimated_income_form"
+            as={:estimated_income}
+            for={%{"estimated_income" => @estimated_income, "estimated_timeframe" => @estimated_timeframe}}
+            class="simple_budgeting form w-1/2"
+            phx-change="change_estimated_income"
+          >
+            <.input field={f[:estimated_income]} type="money" />
+            <.radio_fieldset field={f[:estimated_timeframe]}
+              options={[{"Monthly", "monthly"}, {"Yearly", "yearly"}]}
+              checked_value={@estimated_timeframe}
+            />
+          </.form>
+        </.description_list_row>
+        <.description_list_row>
+          <:label>Total percentage</:label>
+          <div class="flex flex-row">
+            <span class={[
+              @total_percentage != 100.0 && "text-red-500",
+              @total_percentage == 100.0 && "text-green-500"
+            ]}>
+              <%= @total_percentage %>%
+            </span>
+          </div>
+        </.description_list_row>
+      </.description_list>
+
+      <:footer>
+        <div class="flex flex-row justify-end">
+          <div class="flex flex-row space-x-6">
+            <a phx-click="reset_percentages" class="simple_budgeting white button cursor-pointer">
+              Reset percentages
+            </a>
+
+            <.link
+              navigate={~p"/budgets"}
+              class="simple_budgeting button primary"
+            >
+              Return
+            </.link>
+          </div>
+        </div>
+      </:footer>
+    </.card>
+
+    <div class="my-12">
+      <table class="simple_budgeting table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Original percent</th>
+            <th>New Percent</th>
+            <th>Average monthly spend</th>
+            <th>Estimated monthly income by percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for {budget, index} <- Enum.with_index(@budgets_with_averages) do %>
+            <tr>
+              <td>
+                <%= budget.name %>
+              </td>
+              <td>
+                <%= budget.description %>
+              </td>
+              <td>
+                <%= budget.original_percent %>
+              </td>
+              <td>
+                <.form
+                  :let={f}
+                  id={"budget_percent_form_#{index}"}
+                  as={:budget_percent}
+                  for={%{}}
+                  class="simple_budgeting form"
+                  phx-change="change"
+                >
+                  <.input field={f[:id]} type="hidden" value={budget.id} />
+                  <.input
+                    field={f[:percentage]}
+                    type="number"
+                    class="max-w-lg"
+                    value={budget.percentage}
+                    min="0.00"
+                    max="100.00"
+                    step="0.1"
+                  />
+                </.form>
+              </td>
+              <td>
+                <span class="flex flex-row space-x-2">
+                  <%= budget.month_averages_over_year %>
+                  <%= if !Enum.empty?(budget.monthly_averages) do %>
+                    <.tool_tip class="absolute">
+                      <:target>
+                        <.icon name="hero-question-mark-circle ml-1" />
+                      </:target>
+                      <:tooltip>
+                        <div class="flex flex-col">
+                          <label :for={{date, amount} <- budget.monthly_averages}>
+                            <.moment date={date} show_time={false} />: <%= amount %>
+                          </label>
+                        </div>
+                      </:tooltip>
+                    </.tool_tip>
+                  <% end %>
+                </span>
+              </td>
+              <td>
+                <%= SimpleBudgeting.Utils.MoneyFunctions.multiply_with_percent(@estimated_monthly_income, budget.percentage / 100) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </SimpleBudgetingWeb.Application.Wrapper.wrapper>
+</div>

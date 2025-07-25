@@ -1,0 +1,50 @@
+on: push
+
+env:
+  MIX_ENV: test
+  COMPOSE_PROJECT_NAME: simple_budgeting_test
+
+jobs:
+  dependencies:
+    runs-on: [linux]
+    steps:
+    - uses: actions/checkout@v2.3.1
+    - name: Build
+      run: docker compose -f docker-compose.test.yml build app
+
+  compile-warnings: 
+    needs: dependencies
+    runs-on: [linux]
+    steps:
+    - run: docker compose -f docker-compose.test.yml run app mix compile --force --warnings-as-errors
+
+  ex-unit:
+    needs: dependencies
+    runs-on: [linux]
+    steps:
+    - run: docker compose -f docker-compose.test.yml run app mix test --warnings-as-errors
+
+  credo:
+    needs: dependencies
+    runs-on: [linux]
+    steps:
+    - run: docker compose -f docker-compose.test.yml run app mix credo
+
+  format: 
+    needs: dependencies
+    runs-on: [linux]
+    steps:
+    - run: docker compose -f docker-compose.test.yml run app mix format --check-formatted
+    
+  dialyzer: 
+    needs: dependencies
+    runs-on: [linux]
+    steps:
+      - run: docker compose -f docker-compose.test.yml run app mix dialyzer --format github
+
+  down: 
+    if: ${{ always() }}
+    needs: [dialyzer, format, credo, ex-unit, compile-warnings]
+    runs-on: [linux]
+    steps:
+      - run: docker compose -f docker-compose.test.yml down

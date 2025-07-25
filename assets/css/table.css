@@ -1,0 +1,140 @@
+/* .stardust.table th {
+  background-color: #5e9fcb;
+  @apply px-3 text-left text-white font-medium py-4;
+}
+
+.stardust.table > tbody > tr:nth-child(2n+1) td {
+  background-color: #e7e7e7;
+}
+
+.stardust.table > tbody > tr:nth-child(2n) td {
+  background-color: #d8d8d8;
+}
+
+.stardust.table > tbody > tr:nth-child(2n+1) td.green-stripe {
+  background-color: #c5e6d2;
+}
+
+.stardust.table > tbody > tr:nth-child(2n) td.green-stripe {
+  background-color: #c6e2d1;
+}
+
+.stardust.table tr td {
+  color: #2f2c2d;
+  @apply px-3 py-2;
+} */
+
+/* .stardust.table tr td a:not([class*='text-']) {
+  color: #2f2c2d;
+  font-size: 1.125rem;
+} */
+
+.header-attr {
+  @apply pl-10 pr-6 text-right pt-1 pb-3 text-gray-500 text-lg;
+}
+
+.header-text {
+  @apply pb-3 text-lg;
+}
+
+.tag-text {
+  @apply text-sm bg-gray-400 px-3 py-1 my-1 ml-4 rounded-lg;
+}
+
+
+.second-header {
+  @apply text-base font-normal text-center px-4 text-white sticky
+}
+
+.vert-table td {
+  @apply px-4 py-2
+}
+
+.vert-table td:first-child{
+  @apply font-bold
+}
+
+.broken-rule {
+  background-color: #b8c2cc;
+  display: -webkit-inline-box;
+  @apply rounded-lg whitespace-nowrap p-2;
+}
+
+.label {
+  display: inherit;
+  padding: .2em .6em .3em;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  z-index: 99;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: max-content;
+  max-width: 25rem;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 99;
+  bottom: 25%;
+  right: -20%;
+  margin-right: -25px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  z-index: 300;
+}
+
+
+table.simple_budgeting.table {
+  & {
+    @apply min-w-full divide-y divide-gray-300;
+  }
+
+  & thead {
+    @apply bg-emerald-500;
+
+    & tr {
+      @apply divide-x divide-gray-200;
+    }
+
+    & th {
+      @apply lg:whitespace-nowrap lg:px-2 lg:py-3.5 text-center lg:text-left text-xs lg:text-base xl:text-lg font-semibold text-white;
+    }
+
+    & th:first-child {
+      @apply md:pl-6;
+    }
+  }
+
+  & tbody {
+    @apply divide-y divide-gray-200 bg-white;
+
+    & tr {
+      @apply divide-x divide-gray-200;
+    }
+
+    & td {
+      @apply text-center py-1 lg:text-left lg:whitespace-nowrap lg:px-2 lg:py-2 text-xs lg:text-base lg:font-medium text-gray-700;
+    }
+
+    & td:first-child {
+      @apply md:pl-6;
+    }
+  }
+
+}

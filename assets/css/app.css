@@ -1,0 +1,261 @@
+/* This file is for your main application css. */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import "tailwindcss/utilities";
+
+@import "./table.css";
+@import "./tabs.css";
+@import "./modal.css";
+/* @import "./pdf.css"; */
+@import "./form.css";
+/* @import "./_components.css"; */
+@import "tom-select/dist/css/tom-select.css";
+
+a.link, button.link {
+    @apply cursor-pointer underline hover:no-underline text-blue-900 hover:text-blue-500;
+  }
+  
+  .ts-control {
+    border: none;
+    @apply text-base;
+  }
+  
+  .ts-control input {
+    @apply text-base;
+  }
+  
+  .ts-dropdown {
+    @apply text-base;
+  }
+  
+  .ts-dropdown .option {
+    @apply px-4;
+  }
+  
+  /* LiveView specific classes for your customizations */
+  .phx-no-feedback.invalid-feedback,
+  .phx-no-feedback .invalid-feedback {
+    display: none;
+  }
+  
+  .hidden-unless-loading {
+    display: none;
+  }
+  
+  .phx-change-loading .hidden-unless-loading {
+    display: block;
+  }
+  .phx-change-loading .hidden-if-loading {
+    display: none;
+  }
+  
+  .phx-click-loading {
+    opacity: 0.5;
+    transition: opacity 1s ease-out;
+  }
+  
+  .phx-disconnected {
+    cursor: wait;
+  }
+  
+  .phx-disconnected * {
+    pointer-events: none;
+  }
+  
+  .phx-modal {
+    opacity: 1 !important;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .phx-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  .phx-modal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .phx-modal-close:hover,
+  .phx-modal-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Alerts and form errors */
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+  
+  .alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+  }
+  
+  .alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+  }
+  
+  .alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+  }
+  
+  .alert p {
+    margin-bottom: 0;
+  }
+  
+  .alert:empty {
+    display: none;
+  }
+  
+  .invalid-feedback {
+    color: #a94442;
+    display: block;
+  }
+  
+  .auth0-lock-header {
+    display: none !important;
+  }
+  
+  .white.button.xs {
+    @apply inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs md:text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer;
+  }
+  .white.button.sm {
+    @apply inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs md:text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer;
+  }
+  
+  .positive.button.xs {
+    @apply inline-flex items-center px-2.5 py-1.5 border border-blue-300 shadow-sm text-xs md:text-xs font-medium rounded text-blue-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer;
+  }
+  .positive.button.sm {
+    @apply inline-flex items-center px-3 py-2 border border-blue-300 shadow-sm text-xs md:text-sm leading-4 font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer;
+  }
+  
+  .danger.button.sm {
+    @apply inline-flex items-center px-3 py-2 border border-transparent text-xs md:text-sm leading-4 font-medium rounded-md shadow-sm text-red-700 bg-red-200 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500;
+  }
+  .danger.button.xs {
+    @apply inline-flex items-center px-3 py-1 border border-transparent text-xs md:text-xs leading-4 font-medium rounded-md shadow-sm text-red-700 bg-red-200 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500;
+  }
+  
+  .simple_budgeting.button.white {
+    @apply inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-xs md:text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+  }
+  .simple_budgeting.button.primary {
+    @apply inline-flex items-center px-4 py-2 border border-transparent text-xs md:text-sm font-medium rounded-md shadow-sm text-white bg-emerald-500 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer;
+  }
+  .simple_budgeting.button.secondary {
+    @apply inline-flex items-center px-4 py-2 border border-blue-500 text-xs md:text-sm font-medium rounded-md shadow-sm text-white bg-white text-blue-500 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+  }
+  .simple_budgeting.button.tertiary {
+    @apply inline-flex items-center px-4 py-2 border border-yellow-900 text-xs md:text-sm font-medium rounded-md shadow-sm text-white bg-white text-yellow-900 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-900;
+  }
+  .simple_budgeting.button.danger {
+    @apply inline-flex items-center px-4 py-2 border border-red-400 text-xs md:text-sm font-medium rounded-md shadow-sm text-white bg-red-400 text-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-900;
+  }
+  
+  /* Pie chart styling */
+  g.slices path.slice {
+    stroke-width: 2px;
+  }
+  
+  g.labels text {
+    @apply text-xs md:text-base lg:text-lg font-medium;
+  }
+  
+  g.lines polyline {
+    opacity: 0.3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+  }
+  
+  .section-header {
+    line-height: 0.5;
+    text-align: center;
+  }
+  
+  .section-header span {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .section-header span:before,
+  .section-header span:after {
+    content: "";
+    position: absolute;
+    height: 5px;
+    border-bottom: 3px solid black;
+    bottom: 50%;
+    width: 700px;
+  }
+  
+  .section-header span:before {
+    right: 100%;
+    margin-right: 15px;
+  }
+  
+  .section-header span:after {
+    left: 100%;
+    margin-left: 15px;
+  }
+  
+  .show_svg {
+    @apply overflow-hidden flex flex-col w-1/2 h-60 items-center justify-center border border-black;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h6v6H0V0zm6 6h6v6H6V6z' fill='%23F3F4F8' fill-rule='evenodd'/%3E%3C/svg%3E");
+  }
+  
+  [x-cloak] {
+    display: none !important;
+  }
+  
+  .simple_budgeting.dropdown a {
+    @apply text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900 cursor-pointer !no-underline;
+  }
+  
+  .ts-control {
+    @apply px-0 py-0;
+  }
+  
+  .ts-wrapper {
+    @apply border-gray-300 block w-full bg-white rounded-md border border-gray-300 shadow-sm w-full py-1.5 px-3;
+  }
+  
+  .ts-wrapper.focus {
+    @apply border-blue-300 ring-blue-300/5;
+  }
+  
+  .ts-dropdown .option {
+    @apply text-left;
+  }
+  
+  textarea[disabled] {
+    @apply bg-gray-200 cursor-not-allowed;
+  }
+  
+  form label {
+    @apply text-sm text-gray-700 font-normal;
+  }/*# sourceMappingURL=main.css.map */

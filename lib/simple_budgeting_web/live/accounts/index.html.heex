@@ -1,0 +1,105 @@
+<div>
+  <SimpleBudgetingWeb.Application.Wrapper.wrapper title="Accounts" context="Accounts">
+    <.form :let={f} for={Filter.changeset(@filter, %{})} phx-change="filter" phx-submit="filter">
+      <div class="flex flex-row items-center">
+        <.input field={f[:term]} type="search" placeholder="Search by account name..." />
+        <div class="ml-auto">
+          <button
+            type="button"
+            phx-click={show_modal("new_account_modal")}
+            class="simple_budgeting primary button ml-5"
+          >
+            Add new account
+          </button>
+        </div>
+      </div>
+    </.form>
+    <p class="text-lg">
+      <label class="font-bold">Total:</label> <%= @total %>
+    </p>
+    <.paged_table
+      class="mb-12"
+      queryable={@queryable}
+      paginate={JS.push("paginate")}
+      page={@filter.page}
+      per_page={10}
+      preload={[
+        :budgets
+      ]}
+    >
+      <:header>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Current Amount</th>
+      </:header>
+      <:row :let={record}>
+        <tr>
+          <td>
+            <.link
+              navigate={~p"/accounts/#{record.id}"}
+              class="link"
+            >
+              <%= record.name %>
+            </.link>
+          </td>
+          <td>
+            <%= record.description %>
+          </td>
+          <td>
+            <span class="flex flex-row space-x-2">
+              <%= calc_total_amount(record.budgets) %>
+              <.tool_tip class="absolute">
+                <:target>
+                  <.icon name="hero-question-mark-circle ml-1" />
+                </:target>
+                <:tooltip>
+                  <div class="flex flex-col">
+                    <label :for={budget <- record.budgets}>
+                      {budget.name}: {budget.amount}
+                    </label>
+                  </div>
+                </:tooltip>
+              </.tool_tip>
+            </span>
+          </td>
+        </tr>
+      </:row>
+    </.paged_table>
+
+    <div
+      id="account-daily-chart"
+      class="w-full flex flex-col justify-center"
+      phx-hook="DailyValuesChart"
+      data-labels={Jason.encode!(@day_labels)}
+      data-datasets={Jason.encode!(@day_datasets)}
+      >
+    </div>
+
+    <.modal id="new_account_modal">
+      <:title>
+        New Account
+      </:title>
+      <.form
+        :let={f}
+        id="new_account_form"
+        for={@account_changeset}
+        class="simple_budgeting form"
+        phx-change="change"
+        phx-submit="submit"
+      >
+        <.input field={f[:name]} label="Name*" type="text" class="max-w-lg" />
+        <.input field={f[:description]} label="Description" type="text" class="max-w-lg" />
+      </.form>
+      <:footer>
+        <button
+          type="submit"
+          disabled={!@account_changeset.valid?}
+          form="new_account_form"
+          class="button simple_budgeting primary button mr-5 disabled:opacity-50 disabled:!cursor-not-allowed"
+        >
+          Create account
+        </button>
+      </:footer>
+    </.modal>
+  </SimpleBudgetingWeb.Application.Wrapper.wrapper>
+</div>

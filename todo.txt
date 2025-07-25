@@ -1,0 +1,71 @@
+XXXX 1. (Compound transactions) Add "Total Amount:" under "Number of transactions" and have it set to sum(transactions)
+XXXX 2. (Compound transaction) Fix redirect so that it goes back to tansaction index page once transaction is complete
+3. (Transaction) Possibly look into "Common transactions" as a way to help autocomplete transactions every month
+XXXX 4. Have ability to edit all items (transactions, accounts, budgets, ect)
+5. (Budgets Show) Have ability to close a budget and give amount into another budget
+XXXX 6. (Compound transactions) move budget to each transaction rather than at top [BREAKING!!!!!!!!!!!!!!!!!!]
+XXXX 7. Have all amounts have min of 0.0
+XXXX 8. Have percentages have min of 0.0 and max of 100.0
+XXXX 9. (Transactions) Have "Credit/Debit" radio button text show up as red and green with additional "(+)" and "(-)"
+XXXX 10. (Paged table) fix header and footer styling to work on smaller devices
+XXXX 11. (Locations) Have Month and Year filters on index page
+---------- 12. (Transactions) Have "Tax export" button that allows all filtered transactions to be printed to a PDF for filing purposes (include receipts)
+13. (Transactions) Implement receipt uploader
+XXXX 14. Have mix commands that can dump and import the database
+XXXX 15. (Dashboard) fix text styling for bar graphs to match Pie graphs
+XXXX 16. (Dashboard) fix Pie graphs not transitioning anymore
+XXXX 17. (Dashboard) finish dashboard with text and other, smaller graphs below
+XXXX 18. Fix all ordering to be ascending order
+XXXX 19. (Budgets) include oder by name in assigns
+
+
+
+
+=========== ROUND 2 =================
+XXXX 1. Have paycheck transactions not post a transaction if it would be for $0.00
+XXXX 2. Add location select box to paycheck transaction and compound transaction
+XXXX 3. On transaction index page, have month default to current month and year default to current year
+XXXX 4. Fix select box to be able to go up and down and use Tab and Enter
+XXXX 5. Have list of budgets with current amounts at top of transaction page
+XXXX 6. Have new transaction, paycheck, and compound transaction disable "Create" button until forms are filled in
+XXXX 7. Have order by on transaction index page
+XXXX 8. Have location select box in new transaction pages be able to create new locations/redirect to new location page
+9. Have statement exports available (maybe make Forms section for tax sheets and statements)
+XXXX 10. Have all money inputs be custom to show '$' and start adding characters after '.'. So, first number will create $0.0x, then second would be $0.xx, then $x.xx, then $xx.xx, etc.
+XXXX 11. Have Receipt Code filter on transaction index page
+XXXX 12. Add to select box to close options when out of focus/blur (when focus is lost, chose the selected item)
+
+
+
+=========== ROUND 3 =================
+XXXX 1. Have Budget view page that shows line plot of budget's ammount with ability to select transactions and view them over time
+XXXX 2. Add ability to delete transactions
+XXXX 3. Make description column on transaction table be a fixed width with wrapping
+XXXX 4. Update all search selects to use TomSelect
+XXXX 5. Add "Total" to account page which sums up all money in accounts
+--------6. Have GenServer that periodically rebalance budgets (budgets seem to randomly get incorrect amounts)----------
+XXXX 7. Fix transaction Date column showing dates 1 before before they are entered (guess it is a timezone conversion issue).
+XXXX 8. Have landing transaction page default to showing dates newest to oldest
+XXXX 9. Have deleting the last element on a transaction show page revert to transaction page with filter rather than overview page
+XXXX 10. Have search bar on transaction page also be able to search by amount and combined ammount
+XXXX 11. Fix search select box eating first input character
+12. Add ability to check for double entries and warn before they are added (check that a location, date, and amount already exists)
+XXXX 13. Fix bug that keeps making budgets not correct and needing to be rebalanced
+XXXX 14. On balancing budget page, have a column that shows past X months average monthly spend per budget, and have a text box to enter monthly total income that then gets divided up by percentages. This will allow a more informed decision when balancing budgets.
+XXXX 15. Add a dump databse option in drop down on transactions page. Ask for a date and whether the budget is balanced. Save the file in a known location.
+XXXX 16. Add a restore database option in drop down on transactions page. Show table of all found dates and whether they are balanced or not. Select one to restore database.
+17. Have section to rebalance accounts (select how many accounts to add, show their total, put in an expected total, show the difference, and allow the selection of budgets (based on account list) that money will be taken out of or put into)
+
+
+=========== ROUND 4 =================
+XXXX 1. Delete button on transaction show page not working
+XXXX 2. Sort not working for Balancing budget page tooltips
+XXXX 3. Have line charts be able to click and drag to focus in to certain areas
+XXXX 4. Have Balancing budget page "New percent" inputs do 1 decimal point and not 3
+5. Add transaction type that is "Transfer" where you can choose a "From" budget, a "To" budget, an amount, and a description. It will create 2 transactions (1 for each budget) with the description and current date and myself as location.
+XXXX 6. On the transaction show page, have a final row that shows sum of credits and debits are with the filters.
+7. On the budget index page, have either a filter show filter down transactions for budgets to a certain date range for averages or have a graph of months for each budget where you can chose outliers to ignore when making averages.
+8. On the budget page, have a column showing which account the budget is with
+XXXX 9. On the account show page, show all budgets for that account
+XXXX 10. Have the compound transaction Date occured and amount applied at the top and not per transaction.
+11. Have AI page to ask question about accounts

@@ -1,0 +1,96 @@
+defmodule SimpleBudgeting.MixProject do
+  use Mix.Project
+
+  def project do
+    [
+      app: :simple_budgeting,
+      version: "0.1.0",
+      elixir: "~> 1.14",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
+      deps: deps()
+    ]
+  end
+
+  # Configuration for the OTP application.
+  #
+  # Type `mix help compile.app` for more information.
+  def application do
+    [
+      mod: {SimpleBudgeting.Application, []},
+      extra_applications: [:logger, :runtime_tools]
+    ]
+  end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
+  # Specifies your project dependencies.
+  #
+  # Type `mix help deps` for examples and options.
+  defp deps do
+    [
+      {:phoenix, "~> 1.7.18"},
+      {:phoenix_ecto, "~> 4.5"},
+      {:tzdata, "~> 1.1"},
+      {:ecto_sql, "~> 3.10"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 4.1"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:phoenix_live_view, "~> 1.0.0"},
+      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8.3"},
+      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:heroicons,
+       github: "tailwindlabs/heroicons",
+       tag: "v2.1.1",
+       sparse: "optimized",
+       app: false,
+       compile: false,
+       depth: 1},
+      {:swoosh, "~> 1.5"},
+      {:finch, "~> 0.13"},
+      {:telemetry_metrics, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0"},
+      {:gettext, "~> 0.26"},
+      {:jason, "~> 1.2"},
+      {:dns_cluster, "~> 0.1.1"},
+      {:bandit, "~> 1.5"},
+      {:money, "~> 1.12"},
+      # We are using the main branch right now due to a recent change fixing streaming Ollama models.
+      # Switch to the next release candidate with this change.
+      # {:langchain, github: "brainlid/langchain", ref: "d5fb24c4e7b0f46a9d58de749f6e17f5b44e03b9"},
+      # {:langchain, "0.4.0-rc.1"},
+      # Even though master fixed streaming for Ollama, there is still a tool error where Tool calls are not being converted properly while streaming.
+      # We need to use an older version for now that can properly stream Ollama.
+      {:langchain, "0.3.3"},
+      {:earmark, "~> 1.4"}
+    ]
+  end
+
+  # Aliases are shortcuts or tasks specific to the current project.
+  # For example, to install project dependencies and perform other setup tasks, run:
+  #
+  #     $ mix setup
+  #
+  # See the documentation for `Mix` for more info on aliases.
+  defp aliases do
+    [
+      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      "ecto.setup": ["ecto.create", "run priv/repo/seed_database.exs", "ecto.migrate"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "ecto.dump": ["run priv/repo/dump_sql_database.exs"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["tailwind simple_budgeting", "esbuild simple_budgeting"],
+      "assets.deploy": [
+        "tailwind simple_budgeting --minify",
+        "esbuild simple_budgeting --minify",
+        "phx.digest"
+      ]
+    ]
+  end
+end

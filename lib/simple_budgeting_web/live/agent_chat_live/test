@@ -1,0 +1,281 @@
+Callback handler
+for: on_llm_new_delta raised an exception:
+	(FunctionClauseError) no function clause matching in anonymous fn / 2 in SimpleBudgetingWeb.AgentChatLive.Index.assign_llm_chain / 1 at(simple_budgeting 0.1 .0)
+	lib / simple_budgeting_web / live / agent_chat_live / index.ex: 216: anonymous fn(
+  %LangChain.Chains.LLMChain {
+    llm: % LangChain.ChatModels.ChatOllamaAI {
+        endpoint: "http://host.docker.internal:7869/api/chat",
+        keep_alive: "5m",
+        mirostat: 0,
+        mirostat_eta: 0.1,
+        mirostat_tau: 5.0,
+        model: "llama3.1:8b",
+        num_ctx: 2048,
+        num_gqa: nil,
+        num_gpu: nil,
+        num_predict: 128,
+        num_thread: nil,
+        receive_timeout: 60000,
+        repeat_last_n: 64,
+        repeat_penalty: 1.1,
+        seed: 0,
+        stop: nil,
+        stream: true,
+        temperature: 0.0,
+        tfs_z: 1.0,
+        top_k: 40,
+        top_p: 0.9,
+        callbacks: [],
+        verbose_api: false
+    },
+    verbose: true,
+    verbose_deltas: false,
+    tools: [ % LangChain.Function {
+        name: "get_transactions_filters",
+        description: "Get a list of transactions for a given optional budget, start date, and end date",
+        display_text: nil,
+        strict: false,
+        function: #Function < 1.114903733 / 2 in SimpleBudgeting.Utils.AI.Functions.Transactions.execute_get_transactions_filters > ,
+        async: false,
+        parameters_schema: nil,
+        parameters: [ % LangChain.FunctionParam {
+            name: "budget_name",
+            type:: string,
+            item_type: nil,
+            enum: [],
+            description: "Optional: The name of the budget to get transactions for.",
+            required: false,
+            object_properties: []
+        }, % LangChain.FunctionParam {
+            name: "start_date",
+            type:: string,
+            item_type: nil,
+            enum: [],
+            description: "The optional date to start looking at. Must be in the form yyy-mm-dd.",
+            required: false,
+            object_properties: []
+        }, % LangChain.FunctionParam {
+            name: "end_date",
+            type:: string,
+            item_type: nil,
+            enum: [],
+            description: "The optional date to end looking at. Must be in the form yyy-mm-dd. Defaults to today.",
+            required: false,
+            object_properties: []
+        }],
+        options: []
+    }, % LangChain.Function {
+        name: "get_accounts",
+        description: "Get a list of accounts",
+        display_text: nil,
+        strict: false,
+        function: #Function < 1.119967057 / 2 in SimpleBudgeting.Utils.AI.Functions.Accounts.execute_get_accounts > ,
+        async: false,
+        parameters_schema: nil,
+        parameters: [],
+        options: []
+    }, % LangChain.Function {
+        name: "get_budgets",
+        description: "Get a list of budgets",
+        display_text: nil,
+        strict: false,
+        function: #Function < 2.61972127 / 2 in SimpleBudgeting.Utils.AI.Functions.Budgets.execute_get_budgets > ,
+        async: false,
+        parameters_schema: nil,
+        parameters: [],
+        options: []
+    }, % LangChain.Function {
+        name: "get_budget_amount",
+        description: "Get the current amount of a budget",
+        display_text: nil,
+        strict: false,
+        function: #Function < 1.61972127 / 2 in SimpleBudgeting.Utils.AI.Functions.Budgets.execute_get_budget_amount > ,
+        async: false,
+        parameters_schema: nil,
+        parameters: [ % LangChain.FunctionParam {
+            name: "budget_name",
+            type:: string,
+            item_type: nil,
+            enum: [],
+            description: "The name of the budget to get the current amount of.",
+            required: true,
+            object_properties: []
+        }],
+        options: []
+    }, % LangChain.Function {
+        name: "get_locations",
+        description: "Get a list of locations",
+        display_text: nil,
+        strict: false,
+        function: #Function < 1.1790345 / 2 in SimpleBudgeting.Utils.AI.Functions.Locations.execute_get_locations > ,
+        async: false,
+        parameters_schema: nil,
+        parameters: [],
+        options: []
+    }],
+    _tool_map: % {
+        "get_accounts" => % LangChain.Function {
+            name: "get_accounts",
+            description: "Get a list of accounts",
+            display_text: nil,
+            strict: false,
+            function: #Function < 1.119967057 / 2 in SimpleBudgeting.Utils.AI.Functions.Accounts.execute_get_accounts > ,
+            async: false,
+            parameters_schema: nil,
+            parameters: [],
+            options: []
+        },
+        "get_budget_amount" => % LangChain.Function {
+            name: "get_budget_amount",
+            description: "Get the current amount of a budget",
+            display_text: nil,
+            strict: false,
+            function: #Function < 1.61972127 / 2 in SimpleBudgeting.Utils.AI.Functions.Budgets.execute_get_budget_amount > ,
+            async: false,
+            parameters_schema: nil,
+            parameters: [ % LangChain.FunctionParam {
+                name: "budget_name",
+                type:: string,
+                item_type: nil,
+                enum: [],
+                description: "The name of the budget to get the current amount of.",
+                required: true,
+                object_properties: []
+            }],
+            options: []
+        },
+        "get_budgets" => % LangChain.Function {
+            name: "get_budgets",
+            description: "Get a list of budgets",
+            display_text: nil,
+            strict: false,
+            function: #Function < 2.61972127 / 2 in SimpleBudgeting.Utils.AI.Functions.Budgets.execute_get_budgets > ,
+            async: false,
+            parameters_schema: nil,
+            parameters: [],
+            options: []
+        },
+        "get_locations" => % LangChain.Function {
+            name: "get_locations",
+            description: "Get a list of locations",
+            display_text: nil,
+            strict: false,
+            function: #Function < 1.1790345 / 2 in SimpleBudgeting.Utils.AI.Functions.Locations.execute_get_locations > ,
+            async: false,
+            parameters_schema: nil,
+            parameters: [],
+            options: []
+        },
+        "get_transactions_filters" => % LangChain.Function {
+            name: "get_transactions_filters",
+            description: "Get a list of transactions for a given optional budget, start date, and end date",
+            display_text: nil,
+            strict: false,
+            function: #Function < 1.114903733 / 2 in SimpleBudgeting.Utils.AI.Functions.Transactions.execute_get_transactions_filters > ,
+            async: false,
+            parameters_schema: nil,
+            parameters: [ % LangChain.FunctionParam {
+                name: "budget_name",
+                type:: string,
+                item_type: nil,
+                enum: [],
+                description: "Optional: The name of the budget to get transactions for.",
+                required: false,
+                object_properties: []
+            }, % LangChain.FunctionParam {
+                name: "start_date",
+                type:: string,
+                item_type: nil,
+                enum: [],
+                description: "The optional date to start looking at. Must be in the form yyy-mm-dd.",
+                required: false,
+                object_properties: []
+            }, % LangChain.FunctionParam {
+                name: "end_date",
+                type:: string,
+                item_type: nil,
+                enum: [],
+                description: "The optional date to end looking at. Must be in the form yyy-mm-dd. Defaults to today.",
+                required: false,
+                object_properties: []
+            }],
+            options: []
+        }
+    },
+    messages: [ % LangChain.Message {
+        content: [ % LangChain.Message.ContentPart {
+            type:: text,
+            content: "\nYour name is SBAI. You are a knoweledgable Certified Public Accountant (CPA) that is hired to answer accounting questions given account information.\nYou have access to a list of transactions, locations, budgets, and accounts.\nYou can ONLY answer questions on one of these topics. If you are asked questions about anything else, you MUST say \"I do not have that information\".\nYou are able to extrapolate information from the past or future based on the provided information.\nTransactions have the following variables with descriptions for each variable:\n  description- The description of the transaction\n  type- Whether the transaction is a Debit (takes money away from a budget) or a Credit (adds money to a budget)\n  amount- The amount of the transaction\n  applied- Whether the transaction is applied (true) or not applied (false)\n  date_taken- The date the transaction occured\n\nBudgets have the following variables with descriptions for each variable:\n  name- The name of the budget the transaction occured in\n  description- The description of the budget\n  percentage- What percent of a paycheck would go towards this budget\n  amount- The current amount of money that is in the budget\n  open- Whether the budget can take new transactions (open or true) or not (closed or false), previous transactions still apply\n  closed_on- What date the transcation was closed\n\nLocations have the following variables with descriptions for each variable:\n  name- The location name that the transaction took place at\n  description- The description of that location\n\nAccounts have the following variables with descriptions for each variable:\n  name- The account that the budget is associated with\n  description- The description of the account\n\nOther pieces of information to know regarding this data are the following points:\n  A budget will only be changed by a transaction if that transaction is applied.\n  You determine the amount of money that an account currently has by adding up all budget amounts.\n  When working on budgets, it is important to only look at the most recent transaction to get that budget's information.\n  Transactions are linked to both a location and a budget.\n  Budgets are linked to an account.",
+            options: []
+        }],
+        processed_content: nil,
+        index: nil,
+        status:: complete,
+        role:: system,
+        name: nil,
+        tool_calls: [],
+        tool_results: nil,
+        metadata: nil
+    }, % LangChain.Message {
+        content: [ % LangChain.Message.ContentPart {
+            type:: text,
+            content: "\nToday's date in format yyyy-mm-dd is 2025-07-22\n\nDo an overview of my finances based on my budget amounts and transaction history over the last 5 months.\n\nUser says:\nhello",
+            options: []
+        }],
+        processed_content: nil,
+        index: nil,
+        status:: complete,
+        role:: user,
+        name: nil,
+        tool_calls: [],
+        tool_results: nil,
+        metadata: nil
+    }],
+    custom_context: % {
+        today: ~D[2025 - 07 - 22],
+        live_view_pid: #PID < 0.6226 .0 >
+    },
+    message_processors: [],
+    max_retry_count: 3,
+    current_failure_count: 0,
+    delta: nil,
+    last_message: % LangChain.Message {
+        content: [ % LangChain.Message.ContentPart {
+            type:: text,
+            content: "\nToday's date in format yyyy-mm-dd is 2025-07-22\n\nDo an overview of my finances based on my budget amounts and transaction history over the last 5 months.\n\nUser says:\nhello",
+            options: []
+        }],
+        processed_content: nil,
+        index: nil,
+        status:: complete,
+        role:: user,
+        name: nil,
+        tool_calls: [],
+        tool_results: nil,
+        metadata: nil
+    },
+    exchanged_messages: [],
+    needs_response: true,
+    async_tool_timeout: nil,
+    callbacks: [ % {
+        on_llm_new_delta: #Function < 0.45991179 / 2 in SimpleBudgetingWeb.AgentChatLive.Index.assign_llm_chain / 1 > ,
+        on_tool_response_created: #Function < 1.45991179 / 2 in SimpleBudgetingWeb.AgentChatLive.Index.assign_llm_chain / 1 >
+    }]
+}, [ % LangChain.MessageDelta {
+    content: "",
+    merged_content: [],
+    status:: incomplete,
+    index: nil,
+    role:: assistant,
+    tool_calls: [ % {
+        "function" => % {
+            "arguments" => % {
+                "budget_name" => nil,
+                "end_date" => "2025-07-22",
+                "start_date" => "2025-02-22"
+            },
+            "name" => "get_transactions_filters"
+        }
+    }],
+    metadata: nil
+}]) in SimpleBudgetingWeb.AgentChatLive.Index.assign_llm_chain / 1

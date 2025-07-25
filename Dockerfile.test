@@ -1,0 +1,41 @@
+FROM elixir:1.17.0-alpine
+
+RUN apk update && \
+    apk --no-cache --update add \
+      make \
+      g++ \
+      git \
+      wget \
+      curl \
+      npm \
+      inotify-tools && \
+    rm -rf /var/cache/apk/*
+
+ENV MIX_ENV test
+ENV NODE_ENV development
+
+# Ensure latest versions of Hex/Rebar are installed on build
+RUN mix do local.hex --force, local.rebar --force
+
+RUN mkdir /app
+WORKDIR /app
+
+# Install deps
+COPY mix.exs mix.lock ./
+COPY config config
+COPY docker_api docker_api
+RUN mix deps.get && \
+    mix deps.compile
+
+# Install assets
+COPY assets assets
+# RUN yarn --cwd assets install
+
+COPY priv priv
+COPY lib lib
+COPY test test
+COPY .formatter.exs .formatter.exs
+# COPY .dialyzer_ignore.exs .dialyzer_ignore.exs
+COPY .credo.exs .credo.exs
+RUN mix compile 
+

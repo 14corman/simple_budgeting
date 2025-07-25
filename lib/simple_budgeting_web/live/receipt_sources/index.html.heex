@@ -1,0 +1,76 @@
+<div>
+  <SimpleBudgetingWeb.Application.Wrapper.wrapper title="Receipt Sources" context="Receipt Sources">
+    <.form :let={f} for={Filter.changeset(@filter, %{})} phx-change="filter" phx-submit="filter">
+      <div class="flex flex-row items-center">
+        <.input
+          field={f[:receipt_source]}
+          type="search"
+          placeholder="Search by receipt source name..."
+        />
+        <div class="ml-auto">
+          <button
+            type="button"
+            phx-click={show_modal("new_receipt_source_modal")}
+            kind="simple_budgeting primary button ml-5"
+          >
+            Add new receipt source
+          </button>
+        </div>
+      </div>
+    </.form>
+    <.paged_table
+      class="mb-12"
+      queryable={@queryable}
+      page={@filter.page}
+      per_page={10}
+      paginate={JS.push("paginate")}
+    >
+      <:header>
+        <th>Name</th>
+        <th>Description</th>
+      </:header>
+      <:row :let={record}>
+        <tr>
+          <td>
+            <.link
+              navigate={~p"/receipt_sources/#{record.id}"}
+              class="link"
+            >
+              <%= record.name %>
+            </.link>
+          </td>
+          <td>
+            <%= record.description %>
+          </td>
+        </tr>
+      </:row>
+    </.paged_table>
+
+    <.modal id="new_receipt_source_modal">
+      <:title>
+        New Receipt source
+      </:title>
+      <.form
+        :let={f}
+        id="new_receipt_source_form"
+        for={@receipt_source_changeset}
+        class="simple_budgeting form"
+        phx-change="change"
+        phx-submit="submit"
+      >
+        <.input field={f[:name]} label="Name" type="text" class="max-w-lg" />
+        <.input field={f[:description]} label="Description" type="text" class="max-w-lg" />
+      </.form>
+      <:footer>
+        <button
+          type="submit"
+          disabled={!@receipt_source_changeset.valid?}
+          form="new_receipt_source_form"
+          class="button simple_budgeting primary button mr-5 disabled:opacity-50 disabled:!cursor-not-allowed"
+        >
+          Create receipt_source
+        </button>
+      </:footer>
+    </.modal>
+  </SimpleBudgetingWeb.Application.Wrapper.wrapper>
+</div>

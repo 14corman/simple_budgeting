@@ -1,0 +1,31 @@
+<div>
+  <SimpleBudgetingWeb.Application.Wrapper.wrapper title="Dashboard" context="Dashboard">
+    <h1 class="text-xl font-semibold underline w-full text-center">
+      <label>Total: </label>
+      <%= @total %>
+    </h1>
+    <div class="flex flex-col lg:flex-row w-full">
+      <div
+        id="overall-chart"
+        phx-hook="OverallBar"
+        data-budget_labels={Jason.encode!(@budget_labels)}
+        data-budget_dataset={Jason.encode!(@budget_dataset)}
+        data-account_labels={Jason.encode!(@account_labels)}
+        data-account_dataset={Jason.encode!(@account_dataset)}
+        class="w-full lg:w-1/2 flex flex-col justify-center"
+      > </div>
+
+      <div
+        id="total-daily-chart"
+        class="w-full lg:w-1/2 flex flex-col justify-center"
+        phx-hook="DailyValuesChart"
+        data-labels={Jason.encode!(@day_labels)}
+        data-datasets={Jason.encode!(@day_datasets)}
+        >
+          <canvas phx-update="ignore" id="total-daily-chart-canvas">
+            Canvas is not supported!
+          </canvas>
+      </div>
+    </div>
+  </SimpleBudgetingWeb.Application.Wrapper.wrapper>
+</div>

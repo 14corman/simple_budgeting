@@ -1,0 +1,25 @@
+x-phoenix: &phoenix
+  image: predicting_resistance:latest-test
+  build:
+    context: .
+    dockerfile: Dockerfile.test
+  links:
+  - db
+  volumes:
+  - test-plts:/app/priv/plts
+  environment:
+    DATABASE_PASSWORD: postgres
+    DATABASE_HOSTNAME: db
+
+services:
+  app:
+    <<: *phoenix
+    command: mix phx.server
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test
+
+volumes:
+  test-plts:

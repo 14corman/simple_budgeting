@@ -1,0 +1,472 @@
+<div>
+  <SimpleBudgetingWeb.Application.Wrapper.wrapper title="Transactions" context="Transactions">
+    <.form :let={f} for={Filter.changeset(@filter, %{}) |> to_form()} phx-change="filter" phx-submit="filter">
+      <div class="flex flex-row items-center justify-between">
+        <.input field={f[:term]} type="search" placeholder="Search by transaction description..." />
+        <div class="ml-5">
+          <.dropdown :let={[toggle: toggle]} id="transaction_sample_options">
+            <.dropdown_button label="Options" toggle={toggle} />
+            <:content :let={[toggle: toggle]}>
+              <.link navigate={~p"/transactions/new?#{@filter_map}"} class="simple_budgeting button no-underline">
+                Add Transaction
+              </.link>
+
+              <.link navigate={~p"/transactions/new/compound_transaction?#{@filter_map}"}>
+                Add Compound Transaction
+              </.link>
+
+              <.link navigate={~p"/transactions/new/paycheck?#{@filter_map}"}>
+                Add Paycheck
+              </.link>
+
+              <%!--
+                This options is here in case a bug is found that transactions are randomly being inserted, deleted, or applied.
+                This option will have the system rerun every transactions for each budget from the beginning to make sure the
+                amounts are correct.
+               --%>
+              <%!-- <a phx-click={toggle |> JS.push("reblance_budgets")}>
+                Fix budgets
+              </a> --%>
+
+              <a phx-click={toggle |> show_modal("save_data_modal")}>
+                Create save
+              </a>
+
+              <a phx-click={toggle |> show_modal("restore_data_modal")}>
+                Restore from save
+              </a>
+            </:content>
+          </.dropdown>
+        </div>
+      </div>
+      <div class="flex flex-row mb-3">
+        <div class="w-full grid grid-cols-3 2xl:grid-cols-6 mt-3 mb-3 gap-3">
+          <div>
+            <label class="mb-3 text-sm md:text-lg font-semibold md:font-bold">Receipt</label>
+            <.input
+              type="search_select"
+              field={f[:receipt_code]}
+              id="receipt-code-selection"
+              value={@filter.receipt_code}
+              options={@receipt_codes}
+            />
+          </div>
+          <div>
+            <label class="text-sm md:text-lg font-semibold md:font-bold">Location</label>
+            <.input
+              type="search_select"
+              field={f[:location]}
+              id="location-selection"
+              value={@filter.location}
+              options={@locations}
+            />
+          </div>
+          <div>
+            <label class="text-lg font-semibold md:font-bold">Month</label>
+            <.input
+              type="search_select"
+              field={f[:month]}
+              id="month-selection"
+              value={@filter.month}
+              options={[
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+              ]}
+            />
+          </div>
+          <div>
+            <label class="text-sm md:text-lg font-semibold md:font-bold">Year</label>
+            <.input
+              type="search_select"
+              field={f[:year]}
+              id="year-selection"
+              value={@filter.year}
+              options={@years}
+            />
+          </div>
+          <div>
+            <label class="text-sm md:text-lg font-semibold md:font-bold">Budget</label>
+            <.input
+              type="search_select"
+              field={f[:budget]}
+              id="budget-selection"
+              value={@filter.budget}
+              options={@budgets |> Enum.map(& &1.name)}
+            />
+          </div>
+          <div>
+            <label class="text-sm md:text-lg font-semibold md:font-bold">Applied</label>
+            <.input
+              type="search_select"
+              field={f[:applied]}
+              id="applied-selection"
+              value={@filter.applied}
+              options={["Yes", "No"]}
+            />
+          </div>
+        </div>
+      </div>
+    </.form>
+    <div class="overflow-x-auto w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+      <table class="simple_budgeting table">
+        <thead>
+          <tr>
+            <th></th>
+            <th :for={budget <- @budgets} class="!text-xs lg:!text-base">
+              <%= budget.name %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="!text-xs lg:!text-base">Current Amount</td>
+            <%= for budget <- @budgets do %>
+              <td class={[
+                "!text-xs lg:!text-base table-cell !text-center",
+                Money.negative?(budget.amount) && "bg-red-100"
+              ]}>
+                <span class={[
+                  "!font-bold",
+                  Money.negative?(budget.amount) && "!text-red-700"
+                ]}>
+                  <%= budget.amount %>
+                </span>
+              </td>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="overflow-x-auto w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-5">
+      <table class="simple_budgeting table">
+        <thead>
+          <tr>
+            <th class="!text-xs lg:!text-base">
+              Queried Debits
+            </th>
+            <th class="!text-xs lg:!text-base">
+              Queried Credits
+            </th>
+            <th class="!text-xs lg:!text-base">
+              Queried Overall
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="!text-xs lg:!text-base bg-red-100 !text-red-700 !font-bold">{@total_debits}</td>
+            <td class="!text-xs lg:!text-base bg-green-100 !text-green-700 !font-bold">{@total_credits}</td>
+            <td class={[
+              "!text-xs lg:!text-base !font-bold",
+              Money.negative?(@total_adjustments) && "bg-red-100 !text-red-700",
+              !Money.negative?(@total_adjustments) && "bg-green-100 !text-green-700",
+            ]}>{@total_adjustments}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <.paged_table
+      class="mb-12"
+      queryable={@queryable}
+      page={@filter.page}
+      per_page={25}
+      now={@now}
+      paginate={JS.push("paginate")}
+    >
+      <:header>
+        <tr class="h-full">
+          <th class="!p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="date_taken"
+              phx-click="reorder"
+            >
+              Date
+              <%= if  @order_variable == "date_taken" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="!p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="budget_name"
+              phx-click="reorder"
+            >
+              Budget
+              <%= if  @order_variable == "budget_name" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="hidden lg:table-cell !p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="receipt_code"
+              phx-click="reorder"
+            >
+              Receipt Source
+              <%= if  @order_variable == "receipt_code" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="hidden lg:table-cell !p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="combined_amount"
+              phx-click="reorder"
+            >
+              Combined transaction amount
+              <%= if  @order_variable == "combined_amount" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="!p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="location_name"
+              phx-click="reorder"
+            >
+              Location
+              <%= if  @order_variable == "location_name" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="!p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="description"
+              phx-click="reorder"
+            >
+              Description
+              <%= if  @order_variable == "description" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="table-cell md:hidden !p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="amount"
+              phx-click="reorder"
+            >
+              Amount
+              <%= if  @order_variable == "amount" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="hidden md:table-cell !p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="debit"
+              phx-click="reorder"
+            >
+              Debit
+              <%= if  @order_variable == "debit" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="hidden md:table-cell !p-0 h-[56px]">
+            <button
+              type="button"
+              class="flex flex-row items-center justify-center w-full h-full m-auto p-0"
+              phx-value-variable="credit"
+              phx-click="reorder"
+            >
+              Credit
+              <%= if  @order_variable == "credit" do %>
+                <%= if  @order_direction == :asc do %>
+                  <.icon name="hero-chevron-up" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% else %>
+                  <.icon name="hero-chevron-down" class="ml-2 w-6 h-6 fill-current text-white" />
+                <% end %>
+              <% end %>
+            </button>
+          </th>
+          <th class="hidden sm:table-cell">Applied</th>
+        </tr>
+      </:header>
+      <:row :let={record}>
+        <tr>
+          <td>
+            <.link
+              navigate={~p"/transactions/show/#{record.id}?#{@filter_map}"}
+              class="link"
+            >
+              <.moment date={record.date_taken} show_time={false} />
+            </.link>
+          </td>
+          <td>
+            <%= record.budget_name %>
+          </td>
+          <td class="hidden lg:table-cell">
+            <%= record.receipt_code %>
+          </td>
+          <td class="hidden lg:table-cell">
+            <%= record.combined_amounts %>
+          </td>
+          <td>
+            <%= record.location_name %>
+          </td>
+          <td class="max-w-sm">
+            <label class="max-w-sm whitespace-normal"><%= record.description %></label>
+          </td>
+          <td class={[
+            "table-cell md:hidden !text-center",
+            record.type == "Debit" && "bg-red-100",
+            record.type == "Credit" && "bg-green-100"
+          ]}>
+            <span class={[
+              "!font-bold",
+              record.type == "Credit" && "!text-green-700",
+              record.type == "Debit" && "!text-red-700"
+            ]}>
+              <%= record.transaction_amount %>
+            </span>
+          </td>
+          <td class={["hidden md:table-cell !text-center", record.type == "Debit" && "bg-red-100"]}>
+            <%= if record.type == "Debit" do %>
+              <span class="!text-red-700 !font-bold"><%= record.transaction_amount %></span>
+            <% end %>
+          </td>
+          <td class={[
+            "hidden md:table-cell !text-center",
+            record.type == "Credit" && "bg-green-100"
+          ]}>
+            <%= if  record.type == "Credit" do %>
+              <span class="!text-green-700 !font-bold"><%= record.transaction_amount %></span>
+            <% end %>
+          </td>
+          <td class="hidden md:table-cell text-center">
+            <.form
+              :let={f}
+              id={"transaction_applied_form_#{record.transaction_id}"}
+              for={%{}}
+              as={:transaction_applied}
+              class="simple_budgeting form"
+              phx-change="change"
+            >
+              <.input field={f[:id]} type="hidden" value={record.transaction_id} class="max-w-lg" />
+              <.input
+                field={f[:applied]}
+                type="checkbox"
+                checked={record.applied}
+                class="focus:ring-emerald-500 h-6 w-6 text-emerald-700 border-gray-700 rounded"
+              />
+            </.form>
+          </td>
+        </tr>
+      </:row>
+    </.paged_table>
+    <.modal id="save_data_modal">
+      <:title>
+        Create save point for all app data
+      </:title>
+      <.form
+        :let={f}
+        id="save_data_form"
+        for={%{}}
+        as={:save_data}
+        class="simple_budgeting form"
+        phx-submit="save_data_submit"
+      >
+        <.input field={f[:date]} label="Date" type="date" value={@save_data_form_date} />
+        <.input field={f[:is_balanced]} label="Is Balanced?" type="checkbox" value={@save_data_form_is_balanced} />
+      </.form>
+      <:footer>
+        <button
+          type="submit"
+          form="save_data_form"
+          class="button simple_budgeting primary button mr-5 disabled:opacity-50 disabled:!cursor-not-allowed"
+        >
+          Create save point
+        </button>
+      </:footer>
+    </.modal>
+
+    <.modal id="restore_data_modal">
+      <:title>
+        Restore data from save point
+      </:title>
+      <.form
+        :let={f}
+        id="restore_data_form"
+        for={%{}}
+        as={:restore_data}
+        class="simple_budgeting form"
+        phx-change="restore_data_change"
+        phx-submit="restore_data_submit"
+      >
+        <.input field={f[:year]} label="Year" type="select" value={@restore_data_form_year} options={years() |> Enum.map(&to_string/1)} />
+        <.input field={f[:is_balanced]} label="Is Balanced?" type="checkbox" value={@restore_data_form_is_balanced} />
+        <.input field={f[:date]} label="Date" type="select" options={@restore_data_form_filtered_restores |> Enum.map(&SimpleBudgeting.Utils.DBFunctions.date_to_string(&1.date))} value={Map.get(@restore_data_form_selected_restore, :date, Date.utc_today()) |> SimpleBudgeting.Utils.DBFunctions.date_to_string()} />
+        <.input field={f[:file_name]} type="hidden" value={Map.get(@restore_data_form_selected_restore, :file_name, "")} />
+      </.form>
+      <:footer>
+        <button
+          type="submit"
+          form="restore_data_form"
+          class="button simple_budgeting primary button mr-5 disabled:opacity-50 disabled:!cursor-not-allowed"
+          disabled={@restore_data_form_selected_restore == %{}}
+        >
+          Restore from save point
+        </button>
+      </:footer>
+    </.modal>
+  </SimpleBudgetingWeb.Application.Wrapper.wrapper>
+</div>
