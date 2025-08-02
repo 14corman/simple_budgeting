@@ -1154,8 +1154,6 @@ defmodule SimpleBudgetingWeb.CoreComponents do
     """
   end
 
-
-
   def icon(%{name: "fa-user-robot"} = assigns) do
     ~H"""
     <span class="align-middle">

@@ -68,4 +68,5 @@ XXXX 6. On the transaction show page, have a final row that shows sum of credits
 8. On the budget page, have a column showing which account the budget is with
 XXXX 9. On the account show page, show all budgets for that account
 XXXX 10. Have the compound transaction Date occured and amount applied at the top and not per transaction.
-11. Have AI page to ask question about accounts
+XXXX 11. Have AI page to ask question about accounts
+12. Have "Forecast budgets" page to be able to put in monthly estimates for the next year along with monthly estimates for incomme. This will graph the estimates along with estimates based on budget percentages.
