@@ -4,8 +4,8 @@ services:
     ports:
       - "4000:4000"
       - "4369:4369"
-    depends_on:
-      - ollama
+    # depends_on:
+    #   - ollama
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -26,27 +26,27 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-  ollama:
-    volumes:
-      - ./ollama/ollama:/root/.ollama
-    container_name: ollama
-    pull_policy: always
-    tty: true
-    restart: unless-stopped
-    image: docker.io/ollama/ollama:latest
-    ports:
-      - 7869:11434
-    environment:
-      - OLLAMA_KEEP_ALIVE=24h
-    networks:
-      - ollama-docker
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+  # ollama:
+  #   volumes:
+  #     - ./ollama/ollama:/root/.ollama
+  #   container_name: ollama
+  #   pull_policy: always
+  #   tty: true
+  #   restart: unless-stopped
+  #   image: docker.io/ollama/ollama:0.11.6
+  #   ports:
+  #     - 7869:11434
+  #   environment:
+  #     - OLLAMA_KEEP_ALIVE=24h
+  #   networks:
+  #     - ollama-docker
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: all
+  #             capabilities: [gpu]
 
   db:
     image: postgres:16

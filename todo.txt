@@ -70,3 +70,6 @@ XXXX 9. On the account show page, show all budgets for that account
 XXXX 10. Have the compound transaction Date occured and amount applied at the top and not per transaction.
 XXXX 11. Have AI page to ask question about accounts
 12. Have "Forecast budgets" page to be able to put in monthly estimates for the next year along with monthly estimates for incomme. This will graph the estimates along with estimates based on budget percentages.
+13. On budget page, for graph, copy today amounts for each budget into tomorrow so today's amount shows up in graph.
+14. On transaction page and compound transaction page, show current amount for budget and then where the budget will be when the amound is applied
+15. On transaction index page, have transactios occuring on the same day be filtered by inserted at desc so that the most recent transaction is at the top
