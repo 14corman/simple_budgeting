@@ -1,4 +1,4 @@
-FROM elixir:1.17.0-alpine
+FROM elixir:1.19.2-alpine
 
 RUN apk update && \
     apk --no-cache --update add \
