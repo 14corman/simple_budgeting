@@ -1,4 +1,4 @@
-FROM elixir:1.17.0-alpine
+FROM elixir:1.19.3-alpine
 
 
 RUN apk update && \
